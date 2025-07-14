@@ -1,0 +1,23 @@
+# ===== System files =====
+.DS_Store              # macOS
+Thumbs.db              # Windows
+
+# ===== Environment/config files =====
+.env                   # Contentful or other API keys
+
+# ===== Node.js (if added later) =====
+node_modules/
+package-lock.json
+
+# ===== Build artifacts (if you add build tools later) =====
+dist/
+build/
+
+# ===== Log files =====
+*.log
+
+# ===== VS Code workspace settings (optional) =====
+.vscode/
+
+# ===== SASS/SCSS cache (if using preprocessor) =====
+.sass-cache/
