@@ -593,7 +593,7 @@ body[data-theme="dark"] .footer-section::before {
 }
 /* Partner logos default styling */
 #partners-list img.partner-logo {
-  filter: none/*grayscale(100%);*/
+ filter: none; /* grayscale(100%);*/
   transition: filter 0.3s ease, transform 0.3s ease;
   max-height: 80px;
   width: auto;
