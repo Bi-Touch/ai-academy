@@ -1,15 +1,19 @@
 // vite.config.js
 import { defineConfig } from 'vite';
+import path from 'path';
 
 export default defineConfig({
-  root: '.', // project root where index.html is
-  publicDir: 'public', // static assets (e.g., images)
+  root: '.', // Your project root with index.html
+  publicDir: 'public', // Static assets like images go here
   build: {
-    outDir: 'dist', // production build folder
-    assetsDir: 'assets', // where JS/CSS/images go inside dist/
-    emptyOutDir: true, // clean dist before each build
+    outDir: 'dist', // Output folder for build
+    rollupOptions: {
+      input: path.resolve(__dirname, 'index.html')
+    }
   },
-  server: {
-    open: true, // auto open browser on dev
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
   },
 });
