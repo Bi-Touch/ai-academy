@@ -1,23 +1,41 @@
-// contentful-client.js
 import { CONTENTFUL_CONFIG } from './config.js';
+
+const cache = new Map();
+
+/**
+ * Constructs a Contentful API URL for a given content type.
+ * @param {string} contentType - The Contentful content type ID.
+ * @returns {string}
+ */
+function buildContentfulUrl(contentType) {
+  return `${CONTENTFUL_CONFIG.baseUrl}/spaces/${CONTENTFUL_CONFIG.spaceId}/environments/${CONTENTFUL_CONFIG.environment}/entries?access_token=${CONTENTFUL_CONFIG.accessToken}&content_type=${contentType}&include=2`;
+}
 
 /**
  * Generic fetcher for any content type from Contentful.
  * Returns both items and includes (assets, links, etc.)
+ * Uses in-memory cache to avoid duplicate requests.
+ * 
+ * @param {string} contentType - Contentful content type ID.
+ * @returns {Promise<{ items: any[], includes: Object }>}
  */
 export async function fetchEntries(contentType) {
-  const url = `${CONTENTFUL_CONFIG.baseUrl}/spaces/${CONTENTFUL_CONFIG.spaceId}/environments/${CONTENTFUL_CONFIG.environment}/entries?access_token=${CONTENTFUL_CONFIG.accessToken}&content_type=${contentType}&include=2`;
+  if (cache.has(contentType)) return cache.get(contentType);
+
+  const url = buildContentfulUrl(contentType);
 
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const data = await response.json();
-
-    return {
+    const result = {
       items: data.items || [],
       includes: data.includes || {}
     };
+
+    cache.set(contentType, result);
+    return result;
   } catch (error) {
     console.error(`❌ Failed to fetch content type "${contentType}":`, error);
     return { items: [], includes: {} };
@@ -25,68 +43,25 @@ export async function fetchEntries(contentType) {
 }
 
 /**
- * Fetches hero section data from Contentful.
- * Assumes content type 'assets' has a field 'image' (Asset) and 'heroImage' (title)
+ * Fetches hero image assets.
+ * Assumes content type ID is 'assets'.
  */
 export async function fetchHeroAssets() {
-  const url = `${CONTENTFUL_CONFIG.baseUrl}/spaces/${CONTENTFUL_CONFIG.spaceId}/environments/${CONTENTFUL_CONFIG.environment}/entries?access_token=${CONTENTFUL_CONFIG.accessToken}&content_type=assets&include=2`;
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-    const data = await response.json();
-
-    return {
-      items: data.items || [],
-      assets: data.includes?.Asset || []
-    };
-  } catch (err) {
-    console.error('❌ Error fetching hero image content:', err);
-    return { items: [], assets: [] };
-  }
+  return await fetchEntries('assets');
 }
 
 /**
- * Fetches success stories specifically.
+ * Fetches success stories.
+ * Assumes content type ID is 'successStory'.
  */
 export async function fetchSuccessStories() {
-  const url = `${CONTENTFUL_CONFIG.baseUrl}/spaces/${CONTENTFUL_CONFIG.spaceId}/environments/${CONTENTFUL_CONFIG.environment}/entries?access_token=${CONTENTFUL_CONFIG.accessToken}&content_type=successStory&include=2`;
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-    const data = await response.json();
-
-    return {
-      items: data.items || [],
-      includes: data.includes || {}
-    };
-  } catch (err) {
-    console.error('❌ Error fetching success stories:', err);
-    return { items: [], includes: {} };
-  }
+  return await fetchEntries('successStory');
 }
 
 /**
- * ✅ Fetches partner entries (logos + links)
+ * Fetches partners (e.g. logos and links).
+ * Assumes content type ID is 'partner'.
  */
 export async function fetchPartners() {
-  const url = `${CONTENTFUL_CONFIG.baseUrl}/spaces/${CONTENTFUL_CONFIG.spaceId}/environments/${CONTENTFUL_CONFIG.environment}/entries?access_token=${CONTENTFUL_CONFIG.accessToken}&content_type=partner&include=2`;
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-    const data = await response.json();
-
-    return {
-      items: data.items || [],
-      includes: data.includes || {}
-    };
-  } catch (err) {
-    console.error('❌ Error fetching partners:', err);
-    return { items: [], includes: {} };
-  }
+  return await fetchEntries('partner');
 }
