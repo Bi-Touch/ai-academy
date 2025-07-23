@@ -21,6 +21,9 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 
+<!-- Alpine.js for toggling -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 <!-- Custom styles last -->
 <link rel="stylesheet" href="./src/assets/css/styles.css" />
 
@@ -34,29 +37,45 @@
 
 <body data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="70" tabindex="0">
 
-<!-- Navbar -->
+<!-- Tailwind Navbar with Scroll Behavior -->
+<nav
+  x-data="{ open: false, scrolled: false }"
+  x-init="window.addEventListener('scroll', () => scrolled = window.scrollY > 50)"
+  :class="scrolled ? 'bg-white/80 text-gray-900 shadow-md backdrop-blur-md':'bg-black/30 text-white backdrop-blur-sm"
+  class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md transition-all duration-300"
+>
+  <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+    
+    <!-- Brand -->
+    <a href="#hero" :class="scrolled ? 'text-[#9c1095]' : 'text-white'" class="text-xl font-bold transition-colors duration-300">
+      AI Academy
+    </a>
 
-<nav id="mainNav" class="navbar navbar-expand-lg fixed-top">
-  <div class="container">
-    <a class="navbar-brand" href="#hero">AI Academy</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+    <!-- Mobile Toggle -->
+    <button class="md:hidden" @click="open = !open" aria-label="Toggle menu">
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path :class="{ 'hidden': open }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+        <path :class="{ 'hidden': !open }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M6 18L18 6M6 6l12 12" />
+      </svg>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto gap-3">
-        <li class="nav-item"><a class="nav-link" href="#events">Events</a></li>
-        <li class="nav-item"><a class="nav-link" href="#courses">Courses</a></li>
-        <li class="nav-item"><a class="nav-link" href="#why-learn">Why Learn</a></li>
-        <li class="nav-item"><a class="nav-link" href="#news">News</a></li>
-        <li class="nav-item"><a class="nav-link" href="#newsletter">Newsletter</a></li>
+
+    <!-- Menu -->
+    <div :class="open ? 'block' : 'hidden'" class="md:flex md:items-center md:gap-6 mt-4 md:mt-0 w-full md:w-auto">
+      <ul class="flex flex-col md:flex-row gap-4 md:gap-6" id="navbar-links">
+        <li><a href="#hero" class="nav-link font-semibold transition-colors">Home</a></li>
+        <li><a href="#events" class="nav-link font-semibold transition-colors">Events</a></li>
+        <li><a href="#courses" class="nav-link font-semibold transition-colors">Courses</a></li>
+        <li><a href="#why-learn" class="nav-link font-semibold transition-colors">Why Learn</a></li>
+        <li><a href="#news" class="nav-link font-semibold transition-colors">News</a></li>
       </ul>
     </div>
   </div>
 </nav>
 
 <!-- Hero Section -->
-<section id="hero"
+<section id="hero" 
   class="text-white text-center pt-16 pb-16 position-relative"
   style="background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 500px;">
 
@@ -77,13 +96,13 @@
 
 <!-- Events Section -->
 <section id="events" class="section text-dark pt-4 pb-4">
-  <div class="container">
+  <div class="container-fluid px-0">
     
     <!-- Highlighted Upcoming Event -->
     <div id="next-upcoming-event" class="d-none"></div>
 
     <!-- Carousel Scrollable Events -->
-    <h2 class="text-center mb-6">Events</h2> 
+    <h2 class="text-3xl font-semibold text-center mb-6 text-white">Events</h2> 
     <div class="carousel-wrapper">
       <div class="carousel-track" id="events-list">
         <!-- Event cards will be injected here by JavaScript -->
@@ -95,7 +114,7 @@
 <!-- Courses Section -->
 <section id="courses" class="section text-dark pt-2 pb-2">
   <div class="container">
-    <h2 class="text-center mb-6">Explore Our Specialized AI Courses</h2>
+    <h2 class="text-3xl font-semibold text-center mb-6 text-white">Explore Our Specialized AI Courses</h2>
     <div class="content-target" id="courses-list"></div>
   </div>
 </section>
@@ -103,7 +122,7 @@
 <!-- Why Learn Section -->
 <section id="why-learn" class="section text-dark pt-2 pb-2">
   <div class="container">
-    <h2 class="text-center mb-6">Why Learn With Us</h2>
+    <h2 class="text-3xl font-semibold text-center mb-6 text-white">Why Learn With Us</h2>
     <div class="row text-center">
       <div class="col-md-4 mb-8">
         <div class="card h-100 shadow rounded-4">
@@ -136,7 +155,7 @@
 <!-- Testimonials Section -->
 <section id="testimonials" class="section text-dark pt-2 pb-2">
   <div class="container">
-    <h2 class="text-center mb-6">Success Stories</h2>
+    <h2 class="text-3xl font-semibold text-center mb-6 text-white">Success Stories</h2>
 
     <div id="testimonial-carousel-wrapper"
          class="carousel slide"
@@ -173,7 +192,7 @@
 <!-- News Section -->
 <section id="news" class="section text-dark pt-2 pb-2">
   <div class="container">
-    <h2 class="text-center mb-6">Latest News & Articles</h2>
+    <h2 class="text-3xl font-semibold text-center mb-6 text-white">Latest News</h2>
     <div class="d-flex justify-content-center mb-4">
       <div class="btn-group flex-wrap" id="tag-filters">
         <!-- Filter buttons injected via JS -->
@@ -188,7 +207,7 @@
 <!-- Partners Section -->
 <section id="partners" class="section text-dark py-5">
   <div class="container">
-    <h2 class="text-center mb-5">Our Partners</h2>
+    <h2 class="text-3xl font-semibold text-center mb-6 text-white">Our Partners</h2>
     <div id="partners-list" class="row justify-content-center align-items-center g-4">
       <!-- Partner logos will be injected here -->
     </div>
@@ -198,7 +217,7 @@
 <!-- Newsletter Section -->
 <section id="newsletter" class="section text-center newsletter-section pt-2">
   <div class="container">
-    <h2 class="mb-6">Stay updated on new courses, tools, and AI events</h2>
+    <h2 class="text-3xl font-semibold text-center mb-6 text-white">Stay updated on new courses, tools, and AI events</h2>
     <button class="btn btn-light btn-lg animate__animated animate__pulse" data-bs-toggle="modal" data-bs-target="#brevoModal">
       Sign Up for Newsletter
     </button>
@@ -272,6 +291,7 @@
 
       <!-- Right Side: Contact Info -->
       <div class="col-md-5 offset-md-1 mb-4">
+        <h5 class="fw-bold">Contact Us</h5>
         <p class="mb-1"><i class="bi bi-envelope me-2"></i>Email: <a href="mailto:info@admi.africa" class="text-light text-decoration-none">info@admi.africa</a></p>
         <p class="mb-1"><i class="bi bi-telephone me-2"></i>Phone: (+254) 706 349 696, (+254) 711 486 581</p>
         <p class="mb-1"><i class="bi bi-whatsapp me-2"></i>WhatsApp: (+254) 711 486 581</p>
@@ -372,7 +392,31 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+</script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const sections = document.querySelectorAll("section[id]");
+  const navLinks = document.querySelectorAll("#navbar-links .nav-link");
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const id = entry.target.getAttribute("id");
+      const link = document.querySelector(`#navbar-links a[href="#${id}"]`);
+
+      if (entry.isIntersecting) {
+        navLinks.forEach((link) => link.classList.remove("active"));
+        if (link) link.classList.add("active");
+      }
+    });
+  }, {
+    root: null,
+    rootMargin: "-60px 0px -60% 0px", // Adjust for navbar height
+    threshold: 0.3,
+  });
+
+  sections.forEach((section) => observer.observe(section));
+});
 </script>
 
 </body>
