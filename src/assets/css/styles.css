@@ -50,51 +50,32 @@ html, body {
   background: transparent !important;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: var(--text-light);
-  margin-top: 0;
+/* ===================================================
+  NAV BAR
+=================================================== */
+
+.nav-link {
+  color: inherit;
+  position: relative;
 }
 
-a {
-  color: var(--primary);
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: underline;
-}
-
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  backdrop-filter: blur(1.5px);
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: none !important;
-  box-shadow: none !important;
-}
-
-.navbar a {
-  color: #fff;
+.nav-link.active {
+  color: #9c1095; /* Tailwind's blue-600 */
   font-weight: 700;
-  margin: 0 1rem;
-  text-decoration: none;
-  transition: color 0.3s ease;
 }
 
-.navbar-brand {
-  color: #fff;
-  font-weight: 700;
-  font-size: 1.25rem;
-  transition: color 0.3s ease;
+.nav-link::after {
+  content: '';
+  display: block;
+  width: 0%;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.3s ease;
+  margin-top: 2px;
 }
 
-.navbar.scrolled .navbar-brand {
-  color: #003366;
+.nav-link.active::after {
+  width: 100%;
 }
 
 /* ===================================================
@@ -352,7 +333,7 @@ body[data-theme="dark"] .footer-section::before {
   color: #E1306C;
 }
 .social-icon.x i {
-  color: #000; /* fixed the typo: removed extra # */
+  color: #fff; /* fixed the typo: removed extra # */
 }
 .social-icon.youtube i {
   color: #FF0000;
@@ -476,17 +457,11 @@ body[data-theme="dark"] .footer-section::before {
 /* ===================================================
    EVENTS, WHY LEARN, SUCCESS STORIES, PARTNERS
 =================================================== */
-#events-section,
-#why-learn-section,
+#events-section *,
+#why-learn-section *,
 #success-stories-section {
   background: var(--bg-overlay) !important;
   color: var(--text-light);
-}
-
-#events-section *,
-#why-learn-section *,
-#success-stories-section * {
-  color: var(--text-light) !important;
 }
 
 .events-wrapper {
@@ -555,6 +530,19 @@ body[data-theme="dark"] .footer-section::before {
   color: var(--text-light);
 }
 
+/* === RESPONSIVE EVENT CARDS FIX === */
+.events-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.events-container .card {
+  flex: 1 1 300px;
+  max-width: 100%;
+}
+
 .event-description {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -588,6 +576,141 @@ body[data-theme="dark"] .footer-section::before {
   padding: 0.5rem;
   border-radius: 0.375rem;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.next-event-container {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: var(--bs-light);
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  transition: all 0.6s ease-in-out;
+  transform: translateY(40px);
+  opacity: 0;
+}
+
+.next-event-container.slide-in {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.next-event-container h3 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+#next-upcoming-event {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+#next-upcoming-event.slide-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/*upcoming event style*/
+/* Gradient background with vibrant colors */
+.event-banner {
+  background: linear-gradient(to right, #4f46e5, #8b5cf6, #ec4899); /* indigo to pink */
+  color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Floating effect on hover */
+.event-banner:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Pulsing heading */
+.event-banner h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  animation: pulseGlow 2s infinite;
+}
+
+/* Events Carousel - Fully Responsive - still not working*/
+.carousel-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem 0;
+  margin: 0;
+}
+
+.carousel-track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  padding: 1rem;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 1rem;
+}
+
+.carousel-track .card {
+  flex: 0 0 calc(100% - 2rem); /* Fits fully inside scroll container */
+  max-width: 100%;
+  scroll-snap-align: start;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Make the card content readable on small screens */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* Glowing effect */
+@keyframes pulseGlow {
+  0% {
+    text-shadow: 0 0 5px #fff, 0 0 10px #8b5cf6, 0 0 20px #ec4899;
+  }
+  50% {
+    text-shadow: 0 0 10px #fff, 0 0 20px #8b5cf6, 0 0 30px #ec4899;
+  }
+  100% {
+    text-shadow: 0 0 5px #fff, 0 0 10px #8b5cf6, 0 0 20px #ec4899;
+  }
+}
+
+/* Image */
+.event-banner-image {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.countdown {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  color: var(--bs-primary);
 }
 
 .why-learn-grid {
@@ -808,6 +931,26 @@ body[data-theme="dark"] .footer-section::before {
   .swiper-button-next {
     display: none;
   }
+/* Limit modal height and allow scroll on small screens */
+  .modal-dialog {
+    margin: 1rem;
+  }
+
+  .modal-content {
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-body {
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+
+  iframe#brevoSignupIframe {
+    height: auto;
+    min-height: 500px;
+  }
 }
 
 /* ===================================================
@@ -816,28 +959,4 @@ body[data-theme="dark"] .footer-section::before {
 #testimonials-carousel,
 #news-list {
   min-height: 150px;
-}
-
-/* ===================================================
-   SWIPER STYLES (EVENTS CAROUSEL)
-=================================================== */
-.event-swiper {
-  padding: 1rem 0;
-}
-
-.swiper-slide {
-  display: flex;
-  height: auto;
-}
-
-.swiper-slide .card {
-  flex-grow: 1;
-  height: 100%;
-  border-radius: var(--border-radius);
-  background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: var(--text-light);
-  padding: 1rem;
 }
