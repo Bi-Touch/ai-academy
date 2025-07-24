@@ -98,11 +98,12 @@
 <section id="events" class="section text-dark pt-4 pb-4">
   <div class="container-fluid px-0">
     
+    <h2 class="text-3xl font-semibold text-center mb-6 text-white">Events</h2> 
+
     <!-- Highlighted Upcoming Event -->
     <div id="next-upcoming-event" class="d-none"></div>
 
     <!-- Carousel Scrollable Events -->
-    <h2 class="text-3xl font-semibold text-center mb-6 text-white">Events</h2> 
     <div class="carousel-wrapper">
       <div class="carousel-track" id="events-list">
         <!-- Event cards will be injected here by JavaScript -->
@@ -396,26 +397,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const sections = document.querySelectorAll("section[id]");
   const navLinks = document.querySelectorAll("#navbar-links .nav-link");
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const id = entry.target.getAttribute("id");
-      const link = document.querySelector(`#navbar-links a[href="#${id}"]`);
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const id = entry.target.getAttribute("id");
+        const link = document.querySelector(`#navbar-links a[href="#${id}"]`);
+        if (entry.isIntersecting) {
+          navLinks.forEach((l) => l.classList.remove("active"));
+          if (link) link.classList.add("active");
+        }
+      });
+    },
+    {
+      root: null,
+      rootMargin: "0px 0px -60% 0px", // top margin is zero, bottom 60% viewport
+      threshold: 0.3,
+    }
+  );
 
-      if (entry.isIntersecting) {
-        navLinks.forEach((link) => link.classList.remove("active"));
-        if (link) link.classList.add("active");
-      }
+  function observeAllSections() {
+    const sections = document.querySelectorAll("section[id]");
+    sections.forEach((section) => observer.observe(section));
+  }
+
+  observeAllSections();
+
+  // Optional: re-observe when content like "Show More" is clicked
+  document.querySelectorAll('[data-trigger-observe]').forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setTimeout(() => {
+        observeAllSections();  // re-check dynamic content
+        window.scrollBy(0, 1); // nudge scroll to trigger observer
+      }, 300);
     });
-  }, {
-    root: null,
-    rootMargin: "-60px 0px -60% 0px", // Adjust for navbar height
-    threshold: 0.3,
   });
-
-  sections.forEach((section) => observer.observe(section));
 });
 </script>
 
