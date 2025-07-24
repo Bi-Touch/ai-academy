@@ -375,6 +375,8 @@ function renderCourses(items) {
   toggleBtn.textContent = 'Show More Courses';
   toggleBtn.className = 'btn btn-outline-primary mt-3';
   toggleBtn.setAttribute('aria-expanded', 'false');
+  toggleBtn.setAttribute('data-trigger-observe', '');
+  toggleBtn.id = 'show-more-courses';
   container.appendChild(toggleBtn);
 
   let expanded = false;
@@ -413,6 +415,48 @@ function renderCourseCard(item) {
     </div>
   `;
 }
+
+// ================== NAVIGATION OBSERVER ==================
+
+document.addEventListener("DOMContentLoaded", () => {
+  const navLinks = document.querySelectorAll("#navbar-links .nav-link");
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const id = entry.target.getAttribute("id");
+      const link = document.querySelector(`#navbar-links a[href="#${id}"]`);
+
+      if (entry.isIntersecting) {
+        navLinks.forEach((link) => link.classList.remove("active"));
+        if (link) link.classList.add("active");
+      }
+    });
+  }, {
+    root: null,
+    rootMargin: "-100px 0px -60% 0px",
+    threshold: 0.3,
+  });
+
+  window.__observer = observer;
+
+  function observeAllSections() {
+    const sections = document.querySelectorAll("section[id]");
+    sections.forEach(section => observer.observe(section));
+  }
+
+  observeAllSections();
+
+  // Watch for buttons that expand content dynamically
+  document.addEventListener("click", (e) => {
+    const trigger = e.target.closest("[data-trigger-observe]");
+    if (trigger) {
+      setTimeout(() => {
+        observeAllSections();
+        window.scrollBy(0, 1);
+      }, 300);
+    }
+  });
+});
 
 // ================== NEWS ==================
 
