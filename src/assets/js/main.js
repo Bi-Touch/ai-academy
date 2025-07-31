@@ -215,14 +215,12 @@ function renderEventCardList(items, includes) {
       <div class="swiper-wrapper">
         ${items.map(item => {
           const { title, eventDate, location, description, coverImage } = item.fields || {};
-          const imageUrl = getAssetUrl(coverImage?.sys?.id, includes);
+          const imageUrl = getAssetUrl(coverImage?.sys?.id, includes); // keep this exactly as you had it
 
           return `
             <div class="swiper-slide">
               <div class="event-card card h-100 overflow-hidden">
-                <div class="event-image">
-                  <img src="${imageUrl}" alt="${title}" class="w-full h-40 object-cover" loading="lazy" />
-                </div>
+                <div class="event-image" style="background-image: url('${imageUrl}')"></div>
                 <div class="card-content p-4">
                   <h3 class="text-lg font-bold">${title}</h3>
                   <p><strong>Date:</strong> ${eventDate}</p>
